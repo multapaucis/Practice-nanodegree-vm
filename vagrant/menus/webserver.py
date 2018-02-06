@@ -1,4 +1,4 @@
-from HTTPBaseServer import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 
 class webserverHandler(BaseHTTPRequestHandler):
@@ -11,7 +11,7 @@ class webserverHandler(BaseHTTPRequestHandler):
 
                 output = ""
                 output += "<html><body>Hello!</body></html>"
-                self.wfile.write(output)
+                self.wfile.write(bytes(output, "utf-8"))
                 print(output)
                 return
         except IOError:
