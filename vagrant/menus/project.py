@@ -23,7 +23,8 @@ def RestaurantMenu(restaurant_id=1):
     for i in items:
         output += "<b>%s</b>" % i.name
         output += " (<a href='/restaurants/%s/" % i.restaurant_id
-        output += "%s/edit'>edit</a>)</br>" % i.id
+        output += "%s/edit'>edit</a>/<a href=" % i.id
+        output += "'/restaurants/{}/{}/delete'>delete</a>)<br>".format(i.restaurant_id, i.id)
         output += i.price
         output += "</br>"
         output += i.description
@@ -109,8 +110,36 @@ def editMenuItem(restaurant_id, menu_id):
 # Task 3: Create a route for deleteMenuItem function here
 
 
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete', methods=['GET', 'POST'])
 def deleteMenuItem(restaurant_id, menu_id):
-    return "page to delete a menu item. Task 3 complete!"
+    if request.method == 'POST':
+        response = request.form.get('Delete', None)
+        output = ""
+
+        if response:
+            rest = session.query(MenuItem).filter_by(restaurant_id=restaurant_id, id=menu_id).one()
+            session.delete(rest)
+            session.commit()
+            output += "Ok, Item has been Deleted</br>"
+            output += "<a href='/restaurants/%s'>" % restaurant_id
+            output += "Return to Restaurant Home</a>"
+        else:
+            output += "OK, the item will stay... for now"
+
+    else:
+        item = session.query(MenuItem).filter_by(restaurant_id=restaurant_id, id=menu_id).one()
+
+        output = ""
+        output += "Are you sure you wish to delete "
+        output += "%s from the menu?<br><br>" % item.name
+        output += "<form method ='POST' enctype'multipart/form-data' "
+        output += "action='/restaurants/%s" % restaurant_id
+        output += "/%s/delete'>" % menu_id
+        output += "<input type='submit' name='Delete' value='Delete'></form>"
+        output += "<br>Or return to <a href='/restaurants/%s'>" % restaurant_id
+        output += "Restaurant Home</a>"
+
+    return output
 
 
 if __name__ == '__main__':
