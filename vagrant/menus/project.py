@@ -1,5 +1,6 @@
 from flask import Flask
 from flask import request
+from flask import render_template
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -18,20 +19,8 @@ session = DBSession()
 def RestaurantMenu(restaurant_id=1):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
-    output = ''
-    output += "<h1>%s</h1> " % restaurant.name
-    for i in items:
-        output += "<b>%s</b>" % i.name
-        output += " (<a href='/restaurants/%s/" % i.restaurant_id
-        output += "%s/edit'>edit</a>/<a href=" % i.id
-        output += "'/restaurants/{}/{}/delete'>delete</a>)<br>".format(i.restaurant_id, i.id)
-        output += i.price
-        output += "</br>"
-        output += i.description
-        output += '</br></br>'
-    output += "<a href='/restaurants/%s/new'>" % restaurant_id
-    output += "Add a New Item </a>"
-    return output
+    return render_template('menu.html', restaurant=restaurant, items=items)
+
 
 
 # Task 1: Create route for newMenuItem function here
