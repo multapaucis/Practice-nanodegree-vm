@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Item</title>
+</head>
+<body>
+  <h3>Please Leave Any Fields You Don't Wish to Change Blank.</h3>
+  <form method='POST' enctype='multipart/form-data' action='{{url_for("editMenuItem",restaurant_id=item.restaurant_id, menu_id=item.id)}}'>
+    What is the New Name for the Item?</br>
+    <input name='iname' type='text' value='{{item.name}}'></br></br>
+    "What is the New Price for the Item?</br>
+    <input name='iprice' type='text' value='{{item.price}}'></br></br>
+    Please provide a Brief Description of the Item</br>
+    <input name='descript' type='text' size=40 value="{{item.description}}"></br>
+    </br><input type='submit' value='Submit'>
+  </form>
+
+
+</body>
+</html>
