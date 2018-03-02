@@ -3,29 +3,31 @@
 
 <body>
 
-<h1>{{restaurant.name}}</h1>
+  <h1>{{restaurant.name}}</h1>
 
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+        {% for message in messages %}
+        <li><strong>{{message}}</strong></li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
 
-{% for i in items %}
+  {% for i in items %}
+  <div>
+    <p>{{i.name}}
+       (<a href='{{url_for("editMenuItem", restaurant_id=i.restaurant_id, menu_id=i.id)}}'>edit</a>
+        / <a href='{{url_for("deleteMenuItem", restaurant_id=i.restaurant_id, menu_id=i.id)}}'>delete</a>)
+    </p>
+    <p>{{i.description}}</p>
+    <p> {{i.price}} </p>
+    <br>
+  </div>
+  {% endfor %}
 
-<div>
-
-<p>{{i.name}}
- (<a href='{{url_for("editMenuItem", restaurant_id=i.restaurant_id, menu_id=i.id)}}'>edit</a>
-  / <a href='{{url_for("deleteMenuItem", restaurant_id=i.restaurant_id, menu_id=i.id)}}'>delete</a>)
-</p>
-
-
-<p>{{i.description}}</p>
-
-<p> {{i.price}} </p>
-<br>
-</div>
-
-
-{% endfor %}
-
-<a href='{{url_for("newMenuItem", restaurant_id=restaurant.id)}}'>Add a New Item </a>
+  <a href='{{url_for("newMenuItem", restaurant_id=restaurant.id)}}'>Add a New Item </a>
 
 </body>
 
