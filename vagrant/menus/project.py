@@ -60,7 +60,7 @@ def editMenuItem(restaurant_id, menu_id):
             up_item.description = idescription
         session.add(up_item)
         session.commit()
-        flash("The Item has been Updated")
+        flash("Menu Item has been Updated")
         return redirect(url_for('RestaurantMenu', restaurant_id=restaurant_id))
 
     else:
@@ -81,7 +81,7 @@ def deleteMenuItem(restaurant_id, menu_id):
                 restaurant_id=restaurant_id, id=menu_id).one()
         session.delete(rest)
         session.commit()
-        flash("The requested item has been deleted")
+        flash("The requested Menu Item has been deleted")
         return redirect(url_for('RestaurantMenu', restaurant_id=restaurant_id))
 
     else:
