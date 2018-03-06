@@ -38,11 +38,11 @@ a {
 
 .pane {
     position: absolute;
-    left: 25%;
+    left: 10%;
     border: 2px solid;
     border-radius: 25px;
-    padding: 5px;
-    margin: 5px;
+    padding: 15px;
+    margin: 10px;
     border-color: #999999;
     background-color: #333333
 }
@@ -78,4 +78,9 @@ a {
 
 .flash {
     background: #ffffcc;
+}
+
+.newItem {
+    font-size: 1.2em;
+    text-align: center;
 }
