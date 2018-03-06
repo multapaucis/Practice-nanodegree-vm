@@ -100,7 +100,7 @@ def restaurantMenuJSON(restaurant_id):
 def menuItemJSON(restaurant_id, menu_id):
     item = session.query(MenuItem).filter_by(
         restaurant_id=restaurant_id, id=menu_id).one()
-    return jsonify(MenuItems=[item.serialize])
+    return jsonify(MenuItems=item.serialize)
 
 
 if __name__ == '__main__':
