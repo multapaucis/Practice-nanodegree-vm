@@ -1,22 +1,21 @@
 from flask import Flask
-from flask import render_template
+from flask import render_template, redirect, url_for
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base, Restaurant, MenuItem
 app = Flask(__name__)
 
-# Fake Restaurants
-restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
-
-restaurantList = [{'name': 'The CRUDdy Crab', 'id': '1'}, {'name':'Blue Burgers', 'id':'2'},{'name':'Taco Hut', 'id':'3'}]
-
-
-# Fake Menu Items
-items = [ {'name':'Cheese Pizza', 'description':'made with fresh cheese', 'price':'$5.99','course' :'Entree', 'id':'1'}, {'name':'Chocolate Cake','description':'made with Dutch Chocolate', 'price':'$3.99', 'course':'Dessert','id':'2'},{'name':'Caesar Salad', 'description':'with fresh organic vegetables','price':'$5.99', 'course':'Entree','id':'3'},{'name':'Iced Tea', 'description':'with lemon','price':'$.99', 'course':'Beverage','id':'4'},{'name':'Spinach Dip', 'description':'creamy dip with fresh spinach','price':'$1.99', 'course':'Appetizer','id':'5'} ]
-item =  {'name':'Cheese Pizza','description':'made with fresh cheese','price':'$5.99','course' :'Entree'}
+engine = create_engine('sqlite:///restaurantmenu.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 
 @app.route('/')
 @app.route('/restaurants')
 def restaurants():
     '''Main Page with all Restaurants listed'''
+    restaurantList = session.query(Restaurant).all()
     return render_template('restaurants.html', restaurants=restaurantList)
 
 
@@ -29,37 +28,46 @@ def addRestaurant():
 @app.route('/restaurant/<int:restaurant_id>/edit')
 def editRestaurant(restaurant_id):
     '''Page to Edit an existing Restaurant'''
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     return render_template('editRestaurant.html', restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/delete')
 def deleteRestaurant(restaurant_id):
     '''Page to Delete an existing Restaurant'''
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     return render_template('deleteRestaurant.html', restaurant=restaurant)
 
 
 @app.route('/restaurant/<int:restaurant_id>/menu')
 @app.route('/restaurant/<int:restaurant_id>')
 def restaurantMenu(restaurant_id):
-    '''Page to Delete an existing Restaurant'''
+    '''Page to Display all Items for a Specific Restaurant'''
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id).all()
     return render_template('menu.html', restaurant=restaurant, items=items)
 
 
 @app.route('/restaurant/<int:restaurant_id>/menu/new')
 def newMenuItem(restaurant_id):
-    '''Page to Delete an existing Restaurant'''
+    '''Page to add an item to a specific Restaurant'''
     return render_template('newMenuItem.html', restaurant_id=restaurant_id)
 
 
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit')
 def editMenuItem(restaurant_id, menu_id):
-    '''Page to Delete an existing Restaurant'''
+    '''Page to edit a specific item from a Restaurant'''
+    item = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id, id=menu_id).one()
     return render_template('editMenuItem.html', item=item)
 
 
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/delete')
 def deleteMenuItem(restaurant_id, menu_id):
-    '''Page to Delete an existing Restaurant'''
+    '''Page to Delete a specific item from a Restaurant'''
+    item = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id, id=menu_id).one()
     return render_template('deleteMenuItem.html', item=item)
 
 
