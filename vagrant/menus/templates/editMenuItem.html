@@ -2,20 +2,29 @@
 <html>
 <head>
   <title>Edit Item</title>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <h3>Please Leave Any Fields You Don't Wish to Change Blank.</h3>
-  <form method='POST' enctype='multipart/form-data' action="{{ url_for('editMenuItem', restaurant_id=item.restaurant_id, menu_id=item.id) }}">
-    What is the New Name for the Item?</br>
-    <input name='iname' type='text' value='{{item.name}}'></br></br>
-    "What is the New Price for the Item?</br>
-    <input name='iprice' type='text' value='{{item.price}}'></br></br>
-    What is the new Course of the New Item?</br>
-    <input name='icourse' type='text' value='{{item.course}}'></br></br>
-    Please provide a Brief Description of the Item</br>
-    <input name='descript' type='text' size=40 value="{{item.description}}"></br>
-    </br><input type='submit' value='Submit'>
-  </form>
+  <div class="pane">
+    <div class="header">
+      <h2>Edit Menu Item</h2>
+    </div>
+    <h3>Please Leave Any Fields You Don't Wish to Change Blank.</h3>
+    <form method='POST' enctype='multipart/form-data' action="{{ url_for('editMenuItem', restaurant_id=item.restaurant_id, menu_id=item.id) }}">
+      <p>What is the New Name for the Item?</p><br>
+      <input name='iname' type='text' value='{{item.name}}'></br></br>
+      <p>"What is the New Price for the Item?</p></br>
+      <input name='iprice' type='text' value='{{item.price}}'></br></br>
+      <p>What is the new Course of the New Item?</p></br>
+      <input name='icourse' type='text' value='{{item.course}}'></br></br>
+      <p>Please provide a Brief Description of the Item</p></br>
+      <input name='descript' type='text' size=40 value="{{item.description}}"></br>
+      </br><input type='submit' value='Submit'>
+    </form>
+  </div>
+  <div class="home">
+    <a href="{{ url_for('restaurants') }}"> Home </a>
+  </div>
 
 
 </body>

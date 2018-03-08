@@ -2,17 +2,22 @@
 <html>
 <head>
   <title>Edit Restaurant</title>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="heading">
-    <h2>Edit Restaurant</h2>
+  <div class="pane">
+    <div class="header">
+      <h2>Edit Restaurant</h2>
+    </div>
+    <form method='POST' enctype='multipart/form-data' action="{{ url_for('editRestaurant', restaurant_id=restaurant.id) }}">
+      <p>What is the New Name for the Restaurant?</p></br>
+      <input name='rname' type='text' value='{{restaurant.name}}'></br>
+      </br><input type='submit' value='Submit'>
+    </form>
   </div>
-  <form method='POST' enctype='multipart/form-data' action="{{ url_for('editRestaurant', restaurant_id=restaurant.id) }}">
-    What is the New Name for the Restaurant?</br>
-    <input name='rname' type='text' value='{{restaurant.name}}'></br>
-    </br><input type='submit' value='Submit'>
-  </form>
-
+  <div class="home">
+    <a href="{{ url_for('restaurants') }}"> Home </a>
+  </div>
 
 </body>
 </html>

@@ -2,21 +2,27 @@
 <html>
   <head>
     <title>Delete Restaurant</title>
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
   </head>
   <body>
-    <div class='heading'>
-      <h2>Delete Restaurant</h2>
+    <div class="pane">
+      <div class='header'>
+        <h2>Delete Restaurant</h2>
+      </div>
+      <form method ='POST' action="{{ url_for('deleteRestaurant', restaurant_id=restaurant.id) }}">
+        <p>Are you sure you wish to delete {{restaurant.name}}?</p>
+        <input type='submit' name='Delete' value='Delete'>
+      </form>
+      <br>
+      <p>
+        Or Return to
+        <a href="{{ url_for('restaurants') }}">
+        Restaurant List
+        </a>
+      </p>
     </div>
-    <form method ='POST' action="{{ url_for('deleteRestaurant', restaurant_id=restaurant.id) }}">
-      <p>Are you sure you wish to delete {{restaurant.name}}?</p>
-      <input type='submit' name='Delete' value='Delete'>
-    </form>
-    <br>
-    <p>
-      Or Return to
-      <a href="{{ url_for('restaurants') }}">
-      Restaurant List
-      </a>
-    </p>
+    <div class="home">
+      <a href="{{ url_for('restaurants') }}"> Home </a>
+    </div>
   </body>
 </html>

@@ -24,7 +24,7 @@
   <div class='nameAndPrice'>
     <span class='name'> {{i.name}} </span>
     <span class='price'> {{i.price}} </span>
-    <p>{{i.description}}</p>
+    <span class='description'>{{i.description}}</span>
     <div class='editdeletepane'>
       <p>
         (<a href="{{ url_for('editMenuItem', restaurant_id=i.restaurant_id, menu_id=i.id) }}">
@@ -38,9 +38,12 @@
     <br>
   </div>
   {% endfor %}
-  <div class="newItem">
+  <div class="addnew">
     <a href="{{ url_for('newMenuItem', restaurant_id=restaurant.id) }}"> Add a New Item </a>
   </div>
+</div>
+<div class="home">
+  <a href="{{ url_for('restaurants') }}"> Home </a>
 </div>
 </body>
 

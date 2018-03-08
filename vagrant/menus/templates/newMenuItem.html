@@ -2,23 +2,31 @@
 <html>
 <head>
   <title>New Menu Item</title>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="heading">
-    <h2>Add New Menu Item</h2>
+  <div class="pane">
+    <div class="header">
+      <h2>Add New Menu Item</h2>
+    </div>
+    <div class="itemForm">
+      <form method='POST' enctype='multipart/form-data' action="{{ url_for('newMenuItem', restaurant_id=restaurant_id) }}">
+        <p>
+          What is the Name of the New Item?</br>
+          <input name='iname' type='text'></br></br>
+          What is the Price of the New Item?</br>
+          <input name='iprice' type='text'></br></br>
+          What is the Course of the New Item?</br>
+          <input name='icourse' type='text'></br></br>
+          Please provide a Brief Description of the Item</br>
+          <input name='descript' type='text' size=40></br>
+        </p>
+        </br><input type='submit' value='Submit'>
+      </form>
+    </div>
   </div>
-  <div class="itemForm">
-    <form method='POST' enctype='multipart/form-data' action="{{ url_for('newMenuItem', restaurant_id=restaurant_id) }}">
-      What is the Name of the New Item?</br>
-      <input name='iname' type='text'></br></br>
-      What is the Price of the New Item?</br>
-      <input name='iprice' type='text'></br></br>
-      What is the Course of the New Item?</br>
-      <input name='icourse' type='text'></br></br>
-      Please provide a Brief Description of the Item</br>
-      <input name='descript' type='text' size=40></br>
-      </br><input type='submit' value='Submit'>
-    </form>
+  <div class="home">
+    <a href="{{ url_for('restaurants') }}"> Home </a>
   </div>
 </body>
 </html>
