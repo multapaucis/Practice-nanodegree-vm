@@ -19,20 +19,20 @@ def restaurants():
     return render_template('restaurants.html', restaurants=restaurantList)
 
 
-@app.route('/restaurants/new')
+@app.route('/restaurants/new', methods=['GET', 'POST'])
 def addRestaurant():
     '''Page to Add a new Restaurant'''
     return render_template('newRestaurant.html')
 
 
-@app.route('/restaurant/<int:restaurant_id>/edit')
+@app.route('/restaurant/<int:restaurant_id>/edit', methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
     '''Page to Edit an existing Restaurant'''
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
     return render_template('editRestaurant.html', restaurant=restaurant)
 
 
-@app.route('/restaurant/<int:restaurant_id>/delete')
+@app.route('/restaurant/<int:restaurant_id>/delete', methods=['GET', 'POST'])
 def deleteRestaurant(restaurant_id):
     '''Page to Delete an existing Restaurant'''
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
@@ -49,13 +49,14 @@ def restaurantMenu(restaurant_id):
     return render_template('menu.html', restaurant=restaurant, items=items)
 
 
-@app.route('/restaurant/<int:restaurant_id>/menu/new')
+@app.route('/restaurant/<int:restaurant_id>/menu/new', methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
     '''Page to add an item to a specific Restaurant'''
     return render_template('newMenuItem.html', restaurant_id=restaurant_id)
 
 
-@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit')
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/edit',
+           methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_id):
     '''Page to edit a specific item from a Restaurant'''
     item = session.query(MenuItem).filter_by(
@@ -63,7 +64,8 @@ def editMenuItem(restaurant_id, menu_id):
     return render_template('editMenuItem.html', item=item)
 
 
-@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/delete')
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:menu_id>/delete',
+           methods=['GET', 'POST'])
 def deleteMenuItem(restaurant_id, menu_id):
     '''Page to Delete a specific item from a Restaurant'''
     item = session.query(MenuItem).filter_by(

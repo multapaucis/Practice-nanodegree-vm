@@ -8,7 +8,7 @@
     <h2>Add New Restaurant</h2>
   </div>
   <div class="restForm">
-    <form method='POST' enctype='multipart/form-data' action='#'>
+    <form method='POST' enctype='multipart/form-data' action="{{ url_for('addRestaurant') }}">
       What is the Name of the New Restaurant?
       <br>
       <input name='iname' type='text'>

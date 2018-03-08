@@ -7,14 +7,14 @@
     <div class='heading'>
       <h2>Delete Menu Item</h2>
     </div>
-    <form method ='POST' action='#'>
+    <form method ='POST' action="{{ url_for('deleteMenuItem', restaurant_id=item.restaurant_id, menu_id=item.id) }}">
       <p>Are you sure you wish to delete {{item.name}} from the menu?</p>
       <input type='submit' name='Delete' value='Delete'>
     </form>
     <br>
     <p>
       Or Return to
-      <a href='#'>
+      <a href="{{ url_for('restaurantMenu', restaurant_id=item.restaurant_id) }}">
       Restaurant Menu
       </a>
     </p>

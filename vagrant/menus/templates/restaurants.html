@@ -9,17 +9,17 @@
   </div>
   <div class='restaurants'>
     {% for r in restaurants %}
-      <a href='#'>{{r.name}}</a>
+      <a href="{{ url_for('restaurantMenu', restaurant_id=r.id) }}">{{r.name}}</a>
       <div class='EditDelete'>
         <ul>
-          <li><a href="#">Edit</a></li>
-          <li><a href="#">Delete</a></li>
+          <li><a href="{{ url_for('editRestaurant', restaurant_id=r.id) }}">Edit</a></li>
+          <li><a href="{{ url_for('deleteRestaurant', restaurant_id=r.id) }}">Delete</a></li>
         </ul>
       </div>
     {% endfor %}
   </div>
   <div class="AddRestaurant">
-    <a href="#">Add New Restaurant</a>
+    <a href="{{ url_for('addRestaurant') }}">Add New Restaurant</a>
   </div>
 </body>
 </html>

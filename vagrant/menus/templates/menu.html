@@ -27,10 +27,10 @@
     <p>{{i.description}}</p>
     <div class='editdeletepane'>
       <p>
-        (<a href='#'>
+        (<a href="{{ url_for('editMenuItem', restaurant_id=i.restaurant_id, menu_id=i.id) }}">
           edit
         </a>
-         / <a href='#'>delete
+         / <a href="{{ url_for('deleteMenuItem', restaurant_id=i.restaurant_id, menu_id=i.id) }}">delete
         </a>)
       </p>
     </div>
@@ -39,7 +39,7 @@
   </div>
   {% endfor %}
   <div class="newItem">
-    <a href='#'> Add a New Item </a>
+    <a href="{{ url_for('newMenuItem', restaurant_id=restaurant.id) }}"> Add a New Item </a>
   </div>
 </div>
 </body>

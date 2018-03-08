@@ -8,7 +8,7 @@
     <h2>Add New Menu Item</h2>
   </div>
   <div class="itemForm">
-    <form method='POST' enctype='multipart/form-data' action='#'>
+    <form method='POST' enctype='multipart/form-data' action="{{ url_for('newMenuItem', restaurant_id=restaurant_id) }}">
       What is the Name of the New Item?</br>
       <input name='iname' type='text'></br></br>
       What is the Price of the New Item?</br>
