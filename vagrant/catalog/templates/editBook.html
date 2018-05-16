@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Book</title>
+</head>
+<body>
+  <h2>Make Changes to {{book.title}}</h2>
+  <div class="bookForm">
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('editBook', book_id=book.id) }}">
+      <p>
+        Title: <input name="title" type='text' value="{{book.title}}"><br>
+        Author: <input name='author' type='text' value="{{book.author}}"><br>
+        Genre: <select name='genre' value="{{book.genre.name}}">
+          {% for g in genres %}
+            <option value='{{g.name}}'>{{g.name}}</option>
+          {% endfor %}
+        </select><br>
+        Description:<input name='description' maxlength="128" value="{{book.description}}"><br>
+        <input type="submit" value="Submit">
+      </p>
+    </form>
+    <a href="{{url_for('index')}}">Return Home</a>
+  </div>
+</body>

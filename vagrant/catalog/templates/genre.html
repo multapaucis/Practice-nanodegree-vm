@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>{{genre.name}}</title>
+</head>
+<body>
+  <h1>{{genre.name}}</h1>
+  <p>{{genre.description}}</p>
+  <ul>
+    {% for b in books%}
+      <li>{{b.title}}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
