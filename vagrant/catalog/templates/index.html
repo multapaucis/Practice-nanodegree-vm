@@ -1,55 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>The Library</title>
-</head>
-<body>
-  <div class = 'flash'>
-          {% with messages = get_flashed_messages() %}
-      {% if messages %}
-
-        <ul>
-        {% for message in messages %}
-            <li> <strong> {{ message }} </strong> </li>
-        {% endfor %}
-        </ul>
-        {% endif %}
-    {% endwith %}
-
-  </div>
-  {% if 'username' not in session %}
-            <a href="{{url_for('showLogin')}}">Click Here to Login</a>
-          {% else %}
-            {{session.username}},
-            <a href="{{url_for('logout')}}">Logout</a>
-          {% endif %}
-  <div class="genres">
-    <h2>Genres:</h2>
-    <ul>
-      {% for g in genres %}
-        <li><a href="{{url_for('showGenre', genre_id=g.id)}}">{{g.name}}</a>
-          <ul>
-            <li><a href="{{url_for('removeGenre', genre_id=g.id)}}">delete</a></li>
-          </ul>
-        </li>
-      {% endfor %}
-    </ul>
-    <a href="{{url_for('addGenre')}}">Add a New Genre</a>
-    <br>
-  </div>
+{% extends "main.html" %}
+{% block content %}
   <div class="books">
     <h2>Books:</h2>
     <ul>
       {% for b in books %}
-        <li>{{b.title}} by {{b.author}}
-          <ul>
-            <li><a href="{{url_for('editBook', book_id=b.id)}}">edit</a></li>
-            <li><a href="{{url_for('removeBook', book_id=b.id)}}">delete</a></li>
-          </ul>
+        <li>
+          <a href="{{url_for('showBook', book_id=b.id)}}">{{b.title}}</a> by {{b.author}}
         </li>
       {% endfor %}
     </ul>
     <a href="{{url_for('addBook')}}">Add a New Book</a>
   </div>
-</body>
-</html>
+{% endblock %}

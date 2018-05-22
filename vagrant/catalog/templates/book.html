@@ -1,0 +1,11 @@
+{% extends "main.html" %}
+{% block content %}
+  <h2>{{book.title}}</h2>
+  <h3>by: {{book.author}}</h3>
+  <p>Genre: <a href="{{url_for('showGenre', genre_id= book.genre.id)}}">{{book.genre.name}}</a></p>
+  <p>{{book.description}}</p>
+  {% if session.user_id == book.user_id %}
+    <p><a href="{{url_for('editBook', book_id=book.id)}}">Edit Book</a></p>
+    <p><a href="{{url_for('removeBook', book_id=book.id)}}">Delete Book</a></p>
+  {% endif %}
+{% endblock %}

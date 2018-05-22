@@ -1,9 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Delete a Book</title>
-</head>
-<body>
+{% extends "main.html" %}
+{% block content %}
   <h2>Are you sure you wish to delete {{book.title}}?</h2>
   <div class="bookForm">
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('removeBook', book_id=book.id) }}">
@@ -13,4 +9,4 @@
     </form>
     <a href="{{url_for('index')}}">Return Home</a>
   </div>
-</body>
+{% endblock %}

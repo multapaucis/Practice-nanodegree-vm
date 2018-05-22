@@ -1,0 +1,35 @@
+.header {
+  background-color: ##DEB887;
+}
+.header-left {
+  width: 50%;
+  font-size: 2ex;
+  padding-left: 5%;
+  float: left;
+}
+.header-right {
+  width: 50%;
+  float: right;
+  padding-right: 5%;
+  padding-top: 15px;
+
+}
+.container {
+  width: 80%;
+  border: 2px solid;
+  border-radius: 25px;
+  padding: 15px;
+  margin: auto;
+  margin-top: 15px;
+  border-color: #999999;
+  background-color: #FFF8DC;
+}
+.genres{
+  float: left;
+  margin: 10pt;
+}
+
+.books{
+  float: left;
+  margin: 10pt;
+}

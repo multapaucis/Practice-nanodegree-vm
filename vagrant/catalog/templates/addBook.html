@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Add a New Book</title>
-</head>
-<body>
+{% extends "main.html" %}
+{% block content %}
   <h2>Add a New Book to the Library</h2>
   <div class="bookForm">
-    <form method="POST" enctype="multipart/form-data" action="{{ url_for('addBook') }}">
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('addBook') }}" id="bookForm">
       <p>
         Title: <input name="title" type='text'><br>
         Author: <input name='author' type='text'><br>
@@ -15,9 +11,10 @@
             <option value='{{g.name}}'>{{g.name}}</option>
           {% endfor %}
         </select><br>
-        Description:<input name='description' maxlength="128"><br>
+        Description:<br>
+        <textarea name='description' form='bookForm' maxlength="256"></textarea><br>
         <input type="submit" value="Submit">
       </p>
     </form>
   </div>
-</body>
+{% endblock %}

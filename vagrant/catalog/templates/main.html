@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+    {% block head %}
+    <title>{% block title %}{% endblock %} - The Library</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div class="row header">
+      <div class="header-left">
+        <h1>
+          <a href="{{url_for('index')}}">
+            The Library
+          </a>
+        </h1>
+      </div>
+      <div class="header-right text-right">
+        {% if 'username' not in session %}
+          <a href="{{url_for('showLogin')}}">Click Here to Login</a>
+        {% else %}
+          Hi {{session.username}}
+          <a href="{{url_for('logout')}}">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+    <span></span>
+    <div class = 'flash'>
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+              <span><strong> {{ message }} </strong> </span>
+            {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+    <div class="sidebar">
+      {% include "sidebar.html" %}
+    </div>
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>

@@ -5,7 +5,8 @@ from flask import session as login_session
 from flask import make_response
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine, asc, exc
+from sqlalchemy.pool import StaticPool
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
 import httplib2
@@ -14,7 +15,10 @@ import random
 import string
 import requests
 
-engine = create_engine('sqlite:///libraryUser.db')
+engine = create_engine(
+    'sqlite:///libraryUser.db',
+    connect_args={'check_same_thread': False},
+    poolclass=StaticPool)
 
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
@@ -30,71 +34,109 @@ CLIENT_ID = json.loads(
 @app.route('/')
 def index():
     books = session.query(Book).order_by(Book.id)
-    genres = session.query(Genre).order_by(asc(Genre.name))
+    genres = getGenres()
     return render_template('index.html', books=books, genres=genres)
 
 
 # Show a specific genre and all associated books
 @app.route('/genre/<int:genre_id>')
 def showGenre(genre_id):
+    genres = getGenres()
     genre = session.query(Genre).filter_by(id=genre_id).one()
     books = session.query(Book).filter_by(genre=genre).all()
-    return render_template('genre.html', genre=genre, books=books)
+    return render_template(
+        'genre.html', genre=genre, books=books, genres=genres)
 
 
 # Add a new Genre
 @app.route('/genre/add', methods=['GET', 'POST'])
 def addGenre():
+    if 'username' not in login_session:
+        flash('Only logged in Users can edit the Database')
+        return redirect(url_for('showLogin'))
     if request.method == 'POST':
         newGenre = Genre(
             name=request.form['name'],
-            description=request.form['description'])
+            description=request.form['description'],
+            user_id=login_session['user_id'])
         session.add(newGenre)
         session.commit()
+        flash("%s has been added" % newGenre.name)
         return redirect(url_for('index'))
     else:
-        return render_template('addGenre.html')
+        genres = getGenres()
+        return render_template('addGenre.html', genres=genres)
 
 
 # Remove an Existing Genre from the library
 @app.route('/genre/<int:genre_id>/delete', methods=['GET', 'POST'])
 def removeGenre(genre_id):
+    if 'username' not in login_session:
+        flash('Only logged in Users can edit the Database')
+        return redirect(url_for('showLogin'))
     delGenre = session.query(Genre).filter_by(id=genre_id).one()
     books = session.query(Book).filter_by(genre=delGenre).all()
+    if login_session['user_id'] != delGenre.user_id:
+        flash("Only the Genre's Creator can delete it")
+        return redirect(url_for('index'))
     if books:
         flash('Cannot Delete Genres with assigned books')
         return redirect(url_for('index'))
     if request.method == 'POST':
         session.delete(delGenre)
         session.commit()
+        flash("%s has been deleted" % delGenre.name)
         return redirect(url_for('index'))
     else:
-        return render_template('deleteGenre.html', genre=delGenre)
+        genres = getGenres()
+        return render_template(
+            'deleteGenre.html', genre=delGenre, genres=genres)
+
+
+# Show all information for a specific Book
+@app.route('/book/<int:book_id>')
+def showBook(book_id):
+    book = session.query(Book).filter_by(id=book_id).one()
+    genres = getGenres()
+    return render_template('book.html', book=book, genres=genres)
 
 
 # Add a new book to the database
 @app.route('/book/add', methods=['GET', 'POST'])
 def addBook():
+    if 'username' not in login_session:
+        flash('Only logged in Users can edit the Database')
+        return redirect(url_for('showLogin'))
     if request.method == 'POST':
         bookGenre = session.query(Genre).filter_by(
             name=request.form['genre']).one()
         new_book = Book(title=request.form['title'],
                         author=request.form['author'],
                         genre=bookGenre,
-                        description=request.form['description'])
+                        description=request.form['description'],
+                        user_id=login_session['user_id'])
         session.add(new_book)
         session.commit()
+        flash("%s has been added" % new_book.title)
         return redirect(url_for('index'))
     else:
-        all_genres = session.query(Genre).all()
+        all_genres = getGenres()
+        if not all_genres:
+            flash("We need at least one Genre before you can add any books")
+            return redirect(url_for('index'))
         return render_template('addBook.html', genres=all_genres)
 
 
 # Edit an Existing Book in the database
 @app.route('/book/<int:book_id>/edit', methods=['GET', 'POST'])
 def editBook(book_id):
+    if 'username' not in login_session:
+        flash('Only logged in Users can edit the Database')
+        return redirect(url_for('showLogin'))
     editedBook = session.query(Book).filter_by(id=book_id).one()
-
+    if login_session['user_id'] != editedBook.user_id:
+        flash("Only a Book's Creator can edit it")
+        return redirect(url_for('index'))
     if request.method == 'POST':
         if request.form['title']:
             editedBook.title = request.form['title']
@@ -108,9 +150,10 @@ def editBook(book_id):
             editedBook.description = request.form['description']
         session.add(editedBook)
         session.commit()
+        flash("%s has been updated" % editedBook.title)
         return redirect(url_for('index'))
     else:
-        all_genres = session.query(Genre).all()
+        all_genres = getGenres()
         return render_template(
             'editBook.html', genres=all_genres, book=editedBook)
 
@@ -118,13 +161,21 @@ def editBook(book_id):
 # Remove an Existing Book from the library
 @app.route('/book/<int:book_id>/delete', methods=['GET', 'POST'])
 def removeBook(book_id):
+    if 'username' not in login_session:
+        flash('Only logged in Users can edit the Database')
+        return redirect(url_for('showLogin'))
     del_book = session.query(Book).filter_by(id=book_id).one()
+    if login_session['user_id'] != del_book.user_id:
+        flash("Only a Book's Creator can delete it")
+        return redirect(url_for('index'))
     if request.method == 'POST':
         session.delete(del_book)
         session.commit()
+        flash("%s has been deleted" % del_book.title)
         return redirect(url_for('index'))
     else:
-        return render_template('deleteBook.html', book=del_book)
+        genres = getGenres()
+        return render_template('deleteBook.html', book=del_book, genres=genres)
 
 
 # Create state token and show login page
@@ -133,8 +184,8 @@ def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    print "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
+    genres = getGenres()
+    return render_template('login.html', STATE=state, genres=genres)
 
 
 @app.route('/logout')
@@ -265,11 +316,34 @@ def gdisconnect():
         return response
 
 
+@app.route('/library/JSON')
+def allGenresJSON():
+    genres = session.query(Genre).all()
+    return jsonify(Genres=[gen.serialize for gen in genres])
+
+
+@app.route('/genre/<int:genre_id>/JSON')
+def genreBooksJSON(genre_id):
+    genre = session.query(Genre).filter_by(id=genre_id).one()
+    books = session.query(Book).filter_by(genre=genre).all()
+    return jsonify(Books=[b.serialize for b in books])
+
+
+@app.route('/book/<int:book_id>/JSON')
+def bookJSON(book_id):
+    book = session.query(Book).filter_by(id=book_id).one()
+    return jsonify(Book=book.serialize)
+
+
+def getGenres():
+    return session.query(Genre).order_by(asc(Genre.name)).all()
+
+
 def getUserID(email):
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
-    except:
+    except exc.SQLAlchemyError:
         return None
 
 
