@@ -1,6 +1,9 @@
 
 <div class="genres">
-  <h2>Genres:</h2>
+  <h3>Genres:</h3>
+  {% if not genres %}
+    <p>No Genres Added Yet</p>
+  {% endif %}
   <ul>
     {% for g in genres %}
       <li><a href="{{url_for('showGenre', genre_id=g.id)}}">{{g.name}}</a></li>

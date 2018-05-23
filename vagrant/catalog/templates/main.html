@@ -12,36 +12,38 @@
     <div class="row header">
       <div class="header-left">
         <h1>
-          <a href="{{url_for('index')}}">
+          <a href="{{url_for('index')}}" class="title">
             The Library
           </a>
         </h1>
       </div>
       <div class="header-right text-right">
         {% if 'username' not in session %}
-          <a href="{{url_for('showLogin')}}">Click Here to Login</a>
+          <a href="{{url_for('showLogin')}}" class="signin">Click Here to Login</a>
         {% else %}
-          Hi {{session.username}}
-          <a href="{{url_for('logout')}}">Logout</a>
+          <span class="uname">{{session.username}}</span>
+          <img src="{{session.picture}}" alt="profile picture" heigh="40" width="40" class="propic">
+          <a href="{{url_for('logout')}}" class="signin">Logout</a>
         {% endif %}
       </div>
+      <div class = 'flash'>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+              {% for message in messages %}
+                <p><strong> {{ message }} </strong> </p>
+              {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
     </div>
-    <span></span>
-    <div class = 'flash'>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-              <span><strong> {{ message }} </strong> </span>
-            {% endfor %}
-        {% endif %}
-      {% endwith %}
-    </div>
-    <div class="sidebar">
-      {% include "sidebar.html" %}
-    </div>
-    <div class="container">
-      {% block content %}
-      {% endblock %}
+    <div class="main-page">
+      <div class="sidebar">
+        {% include "sidebar.html" %}
+      </div>
+      <div class="container">
+        {% block content %}
+        {% endblock %}
+      </div>
     </div>
   </body>
 </html>

@@ -33,7 +33,7 @@ CLIENT_ID = json.loads(
 @app.route('/library')
 @app.route('/')
 def index():
-    books = session.query(Book).order_by(Book.id)
+    books = session.query(Book).order_by(Book.id).limit(10)
     genres = getGenres()
     return render_template('index.html', books=books, genres=genres)
 

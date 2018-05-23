@@ -3,12 +3,23 @@
   <h2>Add a New Genre to the Library</h2>
   <div class="genreForm">
     <form method="POST" enctype="multipart/form-data" action="{{ url_for('addGenre') }}" id="genreForm">
-      <p>
-        Name: <input name="name" type='text'><br>
-        Description:<br>
-        <textarea name='description' form='genreForm' maxlength="256"></textarea><br>
-        <input type="submit" value="Submit">
-      </p>
+      <div class="form-row">
+        <div class="col-label">
+          <label for="name">Name:</label>
+        </div>
+        <div class="col-form">
+          <input name="name" id="name" type='text'>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="col-label">
+          <label for="desc">Description: </label>
+        </div>
+        <div class="col-form">
+          <textarea name='description' form='genreForm' id="desc" maxlength="256"></textarea>
+        </div>
+      </div>
+      <input type="submit" value="Submit">
     </form>
   </div>
 {% endblock %}
